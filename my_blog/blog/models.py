@@ -4,6 +4,51 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.urls import reverse_lazy
+
+
+class MyUserManager(BaseUserManager):
+    def create_user(self, email, first_name, second_name, age, pic, password=None):
+        if not email:
+            raise ValueError('Email must be set!')
+        #email = self.normalize_email(email)
+        user = self.model(email=email, first_name=first_name, second_name=second_name, age=age, pic=pic)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, first_name, second_name, age, pic, password):
+        user = self.create_user(email, first_name, second_name, age, pic, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+    def get_by_natural_key(self, email_):
+        return self.get(email=email_)
+
+
+class MyUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(max_length=100, verbose_name='E-mail', unique=True, null=True)
+    first_name = models.CharField(max_length=100, verbose_name='Имя', null=True)
+    second_name = models.CharField(max_length=100, verbose_name='Фамилия', null=True)
+    age = models.IntegerField(verbose_name='Возраст', null=True)
+    pic = models.ImageField(upload_to='ava/%Y/%m/%d/', blank=True, null=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'second_name', 'age', 'pic']
+    objects = MyUserManager()
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+    # def get_by_natural_key(self):
+    #     pass
 
 
 class Comment(models.Model):

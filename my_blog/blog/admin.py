@@ -2,6 +2,18 @@ from django.contrib import admin
 from .models import Post, Like, Comment
 from django import forms
 from django.utils.safestring import mark_safe
+from django.contrib.auth.admin import UserAdmin
+from .models import MyUser
+
+
+# class CustomUserAdmin(UserAdmin):
+#     fieldsets =(
+#         (None, {'fields': ('date_of_birth', 'height',)}),
+#     ) + UserAdmin.fieldsets
+#     add_fieldsets = UserAdmin.add_fieldsets + (
+#         (None, {'fields': ('date_of_birth', 'height',)}),
+#     )
+#     list_display = UserAdmin.list_display + ('date_of_birth', 'height', )
 
 
 class PostAdminForm(forms.ModelForm):
@@ -19,7 +31,7 @@ class LikeAdminForm(forms.ModelForm):
 class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
     list_display = ('id', 'title', 'content',  'photo', 'user')
-    fields = ('id', 'title', 'content',  'photo', 'user')
+    fields = ('content', 'title',  'photo', 'user')
 
     def get_photo(self, obj):
         if obj.photo:
@@ -47,6 +59,8 @@ class CommentAdmin(admin.ModelAdmin):
     fields = ('id', 'content', 'created_at')
 
 
+#admin.site.register(MyUser, CustomUserAdmin)
+admin.site.register(MyUser)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Comment)
