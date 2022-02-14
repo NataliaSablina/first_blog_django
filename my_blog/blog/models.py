@@ -1,19 +1,17 @@
 from django.db import models
 from my_blog import settings
-from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.urls import reverse_lazy
 
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, first_name, second_name, age, pic, password=None):
         if not email:
             raise ValueError('Email must be set!')
-        #email = self.normalize_email(email)
+        # email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, second_name=second_name, age=age, pic=pic)
         user.set_password(password)
         user.save(using=self._db)
