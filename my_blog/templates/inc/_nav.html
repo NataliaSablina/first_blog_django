@@ -9,9 +9,19 @@
 
         <li class="nav-item"><a class="nav-link" href="{% url 'main' %}">Главная</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Все посты</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Регистрация</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log in</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Контакты</a></li>
+
+        {% if request.user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'create_post' %}">Создать пост</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'create_category' %}">Добавить категорию</a></li>
+        {% endif %}
+        <span class="navbar-text">
+          {% if request.user.is_authenticated %}
+               <a href = "{% url 'logout' %}">Выход</a>
+          {% else %}
+        <a href="{% url 'signup' %}"> Register</a> | <a href="{% url 'login' %}"> Login</a>
+  {% endif %}
+      </span>
+
       </ul>
     </div>
   </div>

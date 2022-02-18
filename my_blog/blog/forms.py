@@ -1,14 +1,47 @@
 from django import forms
-from .models import MyUser
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import MyUser, Post, Category, Comment
+from django.contrib.auth.forms import UserCreationForm
+from captcha.fields import CaptchaField
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        widgets = {
+            'content': forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('title',)
+        widgets = {
+            'title': forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'content', 'photo', 'category')
+        widgets = {
+            'title': forms.TextInput(attrs={"class": "form-control"}),
+            'content': forms.TextInput(attrs={"class": "form-control"}),
+            'photo': forms.FileInput(attrs={"class": "form-control", "required": "true"}),
+            'category': forms.Select(attrs={"class": "form-control"})
+        }
 
 
 class LoginForm(forms.Form):
+    captcha = CaptchaField()
     email = forms.EmailField(label='E-mail', widget=forms.EmailInput(attrs={"class": "form-control"}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
 
 class RegistrationForm(UserCreationForm):
+    captcha = CaptchaField()
     email = forms.EmailField(label='E-mail', widget=forms.EmailInput(attrs={"class": "form-control"}))
     first_name = forms.CharField(label='Имя', widget=forms.TextInput(attrs={"class": "form-control"}))
     second_name = forms.CharField(label='Фамилия', widget=forms.TextInput(attrs={"class": "form-control"}))

@@ -2,15 +2,11 @@
 {%load static %}
 {% block style %}
 
-<!--<meta http-equiv="refresh" content="0; url= http://127.0.0.1:8000/admin/">-->
-<!--<meta name="robots" content="index, nofollow">-->
-<!--<meta name=description content="Описание содержимого страницы">-->
 <link rel="stylesheet" href="static/css/like.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {%endblock %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-{% for post in posts %}
 <div class="card-md-3">
   <div class="card-body">
       <p class="card-text">Пользователь: <a href="{%url 'get_user' post.user.pk %}">{{post.user.first_name}}</a></p>
@@ -18,8 +14,9 @@
       <p class="card-text">Категория: {{post.category}}</p>
     <h5 class="card-title"><a href="{%url 'get_post' post.pk %}">{{post.title}}</a></h5>
     <p class="card-text">{{post.content}}</p>
-      {%if post.photo%}
-        <img src="{{post.photo.url}}"  width = "350px"  height = "250px">
+    {% if post.photo%}
+      <img src="{{post.photo.url}}"  width = "350px"  height = "250px">
+
       {%endif%}
     <div style="display: flex;">
      <a href="{%url 'like_post' post.pk%}"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-heart" style="font-size:20px" aria-hidden="true">{{post.get_like_number}}</i></p></a>
@@ -31,5 +28,4 @@
   </div>
 
 </div>
-{% endfor %}
 {% endblock %}

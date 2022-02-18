@@ -76,8 +76,8 @@ class LikeAdminForm(forms.ModelForm):
 
 class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
-    list_display = ('id', 'title', 'content',  'photo', 'user')
-    fields = ('content', 'title',  'photo', 'user')
+    list_display = ('id', 'title', 'content',  'photo', 'user', 'category')
+    fields = ('content', 'title',  'photo', 'user', 'category')
 
     def get_photo(self, obj):
         if obj.photo:
@@ -90,7 +90,7 @@ class PostAdmin(admin.ModelAdmin):
 class LikeAdmin(admin.ModelAdmin):
     form = LikeAdminForm
     list_display = ('id', 'user', 'post', 'comment', 'created_at')
-    fields = ('id', 'user', 'post', 'comment', 'created_at')
+    fields = ('user', 'post', 'comment')
 
 
 class CommentAdminForm(forms.ModelForm):
@@ -101,14 +101,14 @@ class CommentAdminForm(forms.ModelForm):
 
 class CommentAdmin(admin.ModelAdmin):
     form = CommentAdminForm
-    list_display = ('id', 'content', 'created_at')
-    fields = ('id', 'content', 'created_at')
+    list_display = ('id', 'user', 'post', 'content', 'created_at')
+    fields = ('user', 'post', 'content')
 
 
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
 
 admin.site.site_title = 'Управление постами'
 admin.site.site_header = 'Управление постами'

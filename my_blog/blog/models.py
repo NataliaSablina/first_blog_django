@@ -50,13 +50,20 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Comment(models.Model):
-    # user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, blank=True, null=True)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, blank=True, null=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    # post = models.ForeignKey(Post, on_delete=models.PROTECT)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    post = models.ForeignKey("Post", on_delete=models.PROTECT, null=True)
+    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    # object_id = models.PositiveIntegerField()
+    # content_object = GenericForeignKey('content_type', 'object_id')
+
+    def get_like_number(self):
+        return self.like_set.all().count()
+
+    def is_liked(self, user):
+        print(self.like_set.filter(user=user))
+        return True
 
     class Meta:
         verbose_name = 'Комментарий'
@@ -67,9 +74,10 @@ class Post(models.Model):
     title = models.CharField(max_length=100, verbose_name='Заголовок')
     content = models.TextField(verbose_name='Контент')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="my_posts")
-    comment = GenericRelation(Comment, related_query_name='posts')
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', null=True, blank= True)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="my_posts",null=True,)
+    # comment = GenericRelation(Comment, related_query_name='posts', blank=True, null=True)
+    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING, null=True)
 
     def get_like_number(self):
         return self.like_set.all().count()
@@ -78,9 +86,24 @@ class Post(models.Model):
         print(self.like_set.filter(user=user))
         return True
 
+    def get_comment_number(self):
+        return self.comment_set.all().count()
+
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+        ordering = ['-created_at']
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Категория")
+
+    def __str__(self):
+        return f"{self.title}"
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
 class Like(models.Model):
