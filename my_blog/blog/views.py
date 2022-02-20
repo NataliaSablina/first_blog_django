@@ -157,6 +157,7 @@ class ViewPosts(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
+    paginate_by = 2
 
     def get_queryset(self):
         return Post.objects.all()
