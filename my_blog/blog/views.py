@@ -2,14 +2,41 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, View
-from django.http import Http404
-from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from . import forms
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail, BadHeaderError, send_mass_mail
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
 
 
+def contact_view(request):
+    if request.method == 'GET':
+        form = forms.ContactForm()
+    elif request.method == 'POST':
+        form = forms.ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            mails = MyUser.objects.values_list('email', flat=True)
+            try:
+                send_mail(f'{subject} от {from_email}', message,
+                          settings.EMAIL_HOST_USER, mails)
+            except BadHeaderError:
+                return HttpResponse('Ошибка в теме письма.')
+            return redirect('success')
+    else:
+        return HttpResponse('Неверный запрос.')
+    return render(request, "blog/email.html", {'form': form})
+
+
+def success_view(request):
+    return HttpResponse('Приняли! Спасибо за вашу заявку.')
+
+
+@login_required(login_url='login')
 def like_comment(request, comment_id):
     if request.user.is_authenticated:
         comment = Comment.objects.get(pk=comment_id)
@@ -30,6 +57,8 @@ def comments_view(request, post_id):
 
 
 class CreateComment(LoginRequiredMixin, View):
+    login_url = 'login'
+
     def get(self, request, post_id):
         form = forms.CommentForm()
         context = {"form": form, }
@@ -48,6 +77,8 @@ class CreateComment(LoginRequiredMixin, View):
 
 
 class CreateCategory(LoginRequiredMixin, View):
+    login_url = 'login'
+
     def get(self, request):
         form = forms.CategoryForm()
         context = {'form': form}
@@ -61,6 +92,8 @@ class CreateCategory(LoginRequiredMixin, View):
 
 
 class CreatePost(LoginRequiredMixin, View):
+    login_url = 'login'
+
     def get(self, request):
         form = forms.PostForm()
         context = {'form': form}
@@ -129,6 +162,7 @@ class ViewPosts(ListView):
         return Post.objects.all()
 
 
+@login_required(login_url='login')
 def like_post(request, post_id):
     if request.user.is_authenticated:
         post = Post.objects.get(pk=post_id)

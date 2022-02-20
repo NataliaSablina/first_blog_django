@@ -4,6 +4,12 @@ from django.contrib.auth.forms import UserCreationForm
 from captcha.fields import CaptchaField
 
 
+class ContactForm(forms.Form):
+    from_email = forms.EmailField(label='Email', required=True)
+    subject = forms.CharField(label='Тема', required=True)
+    message = forms.CharField(label='Сообщение', widget=forms.Textarea, required=True)
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -35,7 +41,6 @@ class PostForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    captcha = CaptchaField()
     email = forms.EmailField(label='E-mail', widget=forms.EmailInput(attrs={"class": "form-control"}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
@@ -63,6 +68,7 @@ class RegistrationForm(UserCreationForm):
     #         if check_password(password2, pw.password):
     #             raise forms.ValidationError('That password has already been used')
     #     return password2
+
     class Meta:
         model = MyUser
         fields = ('email', 'first_name', 'second_name', 'age', 'password1', 'password2')
