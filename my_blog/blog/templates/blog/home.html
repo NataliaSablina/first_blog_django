@@ -10,6 +10,41 @@
 {%endblock %}
 {% block title %}Главная{% endblock %}
 {% block content %}
+<div class = "card">
+            <div class="cart-body">
+<!--              <h5 class="cart-title">Search...</h5>-->
+              <p class = "cart-text">
+                <div class="row">
+<!--              <div class="col-6">-->
+<!--                <form action="" method="get">-->
+<!--                  <div class="form-group form-row">-->
+<!--                    <div class="col-10">-->
+<!--                      <input type="text" class="form-control" name="query" placeholder="Search by name">-->
+<!--                      <input type="hidden" name="search_by" value="name">-->
+<!--                    </div>-->
+<!--                    <div class="col-2">-->
+<!--                      <button type="submit" class="btn btn-success">Search</button>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </form>-->
+<!--              </div>-->
+              <div class="col-6">
+                <form action="" method="get">
+                  <div class="form-group form-row">
+                    <div class="col-10">
+                      <input type="text" class="form-control" name="query" placeholder="Search by post">
+                      <input type="hidden" name="search_by" value="post">
+                    </div>
+                    <div class="col-2">
+                      <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+              </p>
+            </div>
+          </div>
 {% for post in page_obj %}
 <div class="card-md-3">
   <div class="card-body">
@@ -32,6 +67,10 @@
 
 </div>
 {% endfor %}
+
+<!--{% for user in users%}-->
+<!--<a href="{%url 'get_user' user.pk%}">user</a>-->
+<!--{% endfor %}-->
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}

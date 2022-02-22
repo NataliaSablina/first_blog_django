@@ -2,6 +2,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, View
+
+from django.db.models import Q
 from .models import *
 from . import forms
 from django.contrib import messages
@@ -159,8 +161,46 @@ class ViewPosts(ListView):
     context_object_name = 'posts'
     paginate_by = 2
 
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     search_by = self.request.GET.get('search_by')
+    #     query = self.request.GET.get('query')
+    #     print(search_by)
+    #     print(query)
+    #     if search_by in ['post', 'name'] and query:
+    #         if search_by == 'name':
+    #             persons = MyUser.objects.filter(first_name=query)
+    #             context['users'] = persons
+    #             return context
+    #         else:
+    #             posts = Post.objects.filter(content=query)
+    #             context['posts'] = posts
+    #             return context
+    #     else:
+    #         context['posts'] = Post.objects.all()
+    #         return context
+
     def get_queryset(self):
-        return Post.objects.all()
+        search_by = self.request.GET.get('search_by')
+        query = self.request.GET.get('query')
+        print(search_by)
+        print(query)
+        if search_by in ['post', ] and query:
+            # if search_by == 'name':
+            #     persons = MyUser.objects.filter(first_name=query)
+            #     return persons
+            # else:
+                posts = Post.objects.filter(
+                    Q(title__icontains=query) | Q(content__icontains=query))
+                return posts
+        else:
+            return Post.objects.all()
+        # query = self.request.GET.get('q')
+        # object_list = Post.objects.filter(
+        #     Q(title__icontains=query) | Q(content__icontains=query)
+        # )
+        # return object_list
+        # return Post.objects.all()
 
 
 @login_required(login_url='login')
