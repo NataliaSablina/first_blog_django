@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{%load static %}
+{% block style %}
+
+<!--<meta http-equiv="refresh" content="0; url= http://127.0.0.1:8000/admin/">-->
+<!--<meta name="robots" content="index, nofollow">-->
+<!--<meta name=description content="Описание содержимого страницы">-->
+<link rel="stylesheet" href="static/css/like.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%endblock %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class = "card">
+            <div class="cart-body">
+<!--              <h5 class="cart-title">Search...</h5>-->
+              <p class = "cart-text">
+                <div class="row">
+              <div class="col-6">
+                <form action="" method="get">
+                  <div class="form-group form-row">
+                    <div class="col-10">
+                      <input type="text" class="form-control" name="query" placeholder="Search by post user">
+                      <input type="hidden" name="search_by" value="name">
+                    </div>
+                    <div class="col-2">
+                      <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+              </p>
+            </div>
+          </div>
+
+{% for i in user %}
+    <a href="{%url 'get_user' user.pk%}">{{i.first_name}}</a>
+{% endfor %}
+
+{% endblock %}

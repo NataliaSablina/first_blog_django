@@ -14,11 +14,6 @@
     <p class="card-text"><small class="text-muted">{{comment.created_at}}</small></p>
     <p class="card-text">{{comment.content}}</p>
            <a href="{%url 'like_comment' comment.pk%}"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-heart" style="font-size:20px" aria-hidden="true">{{comment.get_like_number}}</i></p></a>
-<!--      -->
-<!--    <div style="display: flex;">-->
-<!--     <a href="{%url 'like_post' post.pk%}"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-heart" style="font-size:20px" aria-hidden="true">{{post.get_like_number}}</i></p></a>-->
-<!--      <a href="#"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-comment" style="font-size:20px"></i></p></a>-->
-<!--    </div>-->
   </div>
 </div>
 {% endfor %}

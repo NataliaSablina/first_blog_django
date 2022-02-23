@@ -185,16 +185,31 @@ class ViewPosts(ListView):
         query = self.request.GET.get('query')
         print(search_by)
         print(query)
-        if search_by in ['post', ] and query:
-            # if search_by == 'name':
-            #     persons = MyUser.objects.filter(first_name=query)
-            #     return persons
-            # else:
+        if search_by in ['post',] and query:
                 posts = Post.objects.filter(
                     Q(title__icontains=query) | Q(content__icontains=query))
                 return posts
         else:
             return Post.objects.all()
+
+
+# class UserSearch(ListView):
+#     model = MyUser
+#     template_name = "blog/search_friend.html"
+#     context_objects_name = "user"
+#
+#     def get_queryset(self):
+#         search_by = self.request.GET.get('search_by')
+#         query = self.request.GET.get('query')
+#         print(search_by)
+#         print(query)
+#         if search_by in ['name', ] and query:
+#             if search_by == 'name':
+#                 user = MyUser.objects.filter(
+#                     Q(first_name__icontains=query) | Q(second_name__icontains=query))
+#                 return user
+#         else:
+#             return MyUser.objects.all()
         # query = self.request.GET.get('q')
         # object_list = Post.objects.filter(
         #     Q(title__icontains=query) | Q(content__icontains=query)

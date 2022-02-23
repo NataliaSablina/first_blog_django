@@ -19,7 +19,7 @@
 <!--                <form action="" method="get">-->
 <!--                  <div class="form-group form-row">-->
 <!--                    <div class="col-10">-->
-<!--                      <input type="text" class="form-control" name="query" placeholder="Search by name">-->
+<!--                      <input type="text" class="form-control" name="query" placeholder="Search by post author">-->
 <!--                      <input type="hidden" name="search_by" value="name">-->
 <!--                    </div>-->
 <!--                    <div class="col-2">-->
@@ -46,26 +46,31 @@
             </div>
           </div>
 {% for post in page_obj %}
-<div class="card-md-3">
-  <div class="card-body">
-      <p class="card-text">Пользователь: <a href="{%url 'get_user' post.user.pk %}">{{post.user.first_name}}</a></p>
-    <p class="card-text"><small class="text-muted">{{post.created_at}}</small></p>
+<div class="card mb-3" style="max-width: 1450px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+        {%if post.photo%}
+            <img src="{{post.photo.url}}" class="img-fluid rounded-start" alt="...">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+          <p class="card-text">Пользователь: <a href="{%url 'get_user' post.user.pk %}">{{post.user.first_name}}</a></p>
+          <p class="card-text"><small class="text-muted">{{post.created_at}}</small></p>
       <p class="card-text">Категория: {{post.category}}</p>
     <h5 class="card-title"><a href="{%url 'get_post' post.pk %}">{{post.title}}</a></h5>
-    <p class="card-text">{{post.content}}</p>
-      {%if post.photo%}
-        <img src="{{post.photo.url}}"  width = "350px"  height = "250px">
-      {%endif%}
-    <div style="display: flex;">
+        <p class="card-text">{{post.content|safe|linebreaks}}</p>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+        <div style="display: flex;">
      <a href="{%url 'like_post' post.pk%}"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-heart" style="font-size:20px" aria-hidden="true">{{post.get_like_number}}</i></p></a>
       <a href="{% url 'comments_view' post.pk%}"><p style="width: 50px; color: #666666; background-color: #FFFFFF;"><i class="fa fa-comment" style="font-size:20px" aria-hidden="true">{{post.get_comment_number}}</i></p></a>
 <!--      <a href="#"><i class="fa fa-comment" aria-hidden="true"></i></a>-->
     </div>
-
-
+    </div>
   </div>
-
 </div>
+
 {% endfor %}
 
 <!--{% for user in users%}-->

@@ -17,4 +17,5 @@ urlpatterns =[
     path('comments_view/<int:post_id>', comments_view, name='comments_view'),
     path('contact/', contact_view, name='contact'),
     path('success/', success_view, name='success'),
+    # path('search_user', UserSearch.as_view(), name='users'),
 ]
